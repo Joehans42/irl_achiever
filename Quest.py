@@ -9,6 +9,7 @@ class Quest():
         self.text = text
         self.type = type
         self.completed = completed
+        self.streak = 0
 
     def complete(self):
         self.completed = True

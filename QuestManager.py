@@ -33,3 +33,9 @@ class QuestManager():
         print('List of quests:\n')
         for i, q in enumerate(self.quests):
             print(f'Quest {i+1}: {q.title}')
+
+    def display_quests(self, root):
+        for i, q in enumerate(self.quests):
+            qtitle = q.title
+            qtext = q.text
+            

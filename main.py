@@ -1,3 +1,5 @@
+import os
+import numpy as np
 import tkinter as tk
 from tkinter import ttk
 from QuestManager import QuestManager
@@ -17,6 +19,10 @@ def process_form(qm):
 def show_q(qm):
     qm.show_quests()
 
+def save_data(ap, xp, lvl):
+    data = np.array(ap, xp, lvl)
+    np.save('data/account.npy', data)
+
 def calculate_geometry(root, percentage_width):
     screen_height = root.winfo_screenheight()
     screen_width = root.winfo_screenwidth()
@@ -28,6 +34,9 @@ def calculate_geometry(root, percentage_width):
     return window_geometry
 
 if __name__ == "__main__":
+
+    ## Load Activity Points, EXP and Level
+    ap, xp, lvl = np.load('data/account.npy') if os.path.exists('data/account.npy') else 0, 0, 0
 
     ## Initialize a QuestManager to keep track of quests
     qm = QuestManager()
