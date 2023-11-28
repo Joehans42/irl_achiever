@@ -57,6 +57,12 @@ def calculate_geometry(root, percentage_width):
     window_geometry = f"{window_width}x{window_height}+0+0"
     return window_geometry
 
+def create_quest_window(root):
+    window = tk.Toplevel(root)
+    window.geometry = ('200x200')
+    window.title('Create quest')
+    tk.Label(window, text='sup').place(relx=0.0, rely=0.0, anchor='n')
+
 if __name__ == "__main__":
 
     ## Initialize a QuestManager to keep track of quests
@@ -79,6 +85,7 @@ if __name__ == "__main__":
     percentage_width = 15
     window_geometry = calculate_geometry(root, percentage_width)
     root.geometry(window_geometry)
+
     ## remove borders and exit button
     #root.overrideredirect(True)
 
@@ -117,6 +124,10 @@ if __name__ == "__main__":
     ## Give XP button
     giveXP_button = tk.Button(root, text="Give XP", command=lambda: give_xp(100))
     giveXP_button.pack()
+
+    ## Create quest button
+    createq_button = tk.Button(root, text="Create Quest", command=lambda: create_quest_window(root))
+    createq_button.place(relx=0.0, rely=0.0, anchor='nw')
 
     ## XP and LVL labels
     xp_label = tk.Label(root, text=f'XP: {xp}/{xp_tonext}')

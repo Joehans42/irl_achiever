@@ -10,6 +10,7 @@ class Quest():
         self.type = type
         self.completed = completed
         self.streak = 0
+        self.xp = 100
 
     def complete(self):
         self.completed = True
