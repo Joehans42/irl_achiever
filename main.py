@@ -19,6 +19,30 @@ def process_form(qm):
 def show_q(qm):
     qm.show_quests()
 
+def give_xp(amount):
+    global xp
+    xp += amount
+    if xp >= xp_tonext:
+        level_up()
+        xp = 0
+    xp_label.config(text=f'XP: {xp}/{xp_tonext}')
+
+def level_up():
+    global lvl
+    global xp_tonext
+    lvl += 1
+    xp_tonext = lvl*500
+    lvl_label.config(text=f'LVL: {lvl}')
+
+def update_all_labels():
+    return
+
+def update_xp():
+    xp_label.config(text=f'XP: {xp}/{xp_tonext}')
+
+def update_lvl():
+    lvl_label.config(text=f'LVL: {lvl}')
+
 def save_data(ap, xp, lvl):
     data = np.array(ap, xp, lvl)
     np.save('data/account.npy', data)
@@ -35,15 +59,21 @@ def calculate_geometry(root, percentage_width):
 
 if __name__ == "__main__":
 
-    ## Load Activity Points, EXP and Level
-    ap, xp, lvl = np.load('data/account.npy') if os.path.exists('data/account.npy') else 0, 0, 0
-
     ## Initialize a QuestManager to keep track of quests
     qm = QuestManager()
 
     ## Initialize root frame
     root = tk.Tk()
     root.title("Example")
+
+    ## Trace displayed variables for continuous updates
+    ap = xp = lvl = tk.IntVar()
+    xp.trace('w', update_xp)
+    lvl.trace('w', update_lvl)
+
+    ## Load Activity Points, EXP and Level
+    ap, xp, lvl = np.load('data/account.npy') if os.path.exists('data/account.npy') else 0, 0, 1
+    xp_tonext = lvl*500
 
     ## Setting root frame height and width
     percentage_width = 15
@@ -84,5 +114,16 @@ if __name__ == "__main__":
     showq_button = tk.Button(root, text="Show quests", command=lambda: show_q(qm))
     showq_button.pack()
 
+    ## Give XP button
+    giveXP_button = tk.Button(root, text="Give XP", command=lambda: give_xp(100))
+    giveXP_button.pack()
+
+    ## XP and LVL labels
+    xp_label = tk.Label(root, text=f'XP: {xp}/{xp_tonext}')
+    lvl_label = tk.Label(root, text=f'LVL: {lvl}')
+
+
+    xp_label.place(relx=0.0, rely=1.0, anchor='sw')
+    lvl_label.place(relx=0.5, rely=1.0, anchor='s')
 
     root.mainloop()
