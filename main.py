@@ -44,7 +44,7 @@ def update_lvl():
     lvl_label.config(text=f'LVL: {lvl}')
 
 def save_data(ap, xp, lvl):
-    data = np.array(ap, xp, lvl)
+    data = np.array([ap, xp, lvl], dtype=object)
     np.save('data/account.npy', data)
 
 def calculate_geometry(root, percentage_width):
@@ -63,6 +63,11 @@ def create_quest_window(root):
     window.title('Create quest')
     tk.Label(window, text='sup').place(relx=0.0, rely=0.0, anchor='n')
 
+def on_close():
+    # Assuming ap, xp, and lvl are accessible here, otherwise, you'll need to make them accessible
+    save_data(ap, xp, lvl)
+    root.destroy()
+
 if __name__ == "__main__":
 
     ## Initialize a QuestManager to keep track of quests
@@ -74,11 +79,18 @@ if __name__ == "__main__":
 
     ## Trace displayed variables for continuous updates
     ap = xp = lvl = tk.IntVar()
-    xp.trace('w', update_xp)
-    lvl.trace('w', update_lvl)
+    xp.trace_add('write', update_xp)
+    lvl.trace_add('write', update_lvl)
+
+    # Assuming 'root' is your Tkinter root window
+    root.protocol("WM_DELETE_WINDOW", on_close)
 
     ## Load Activity Points, EXP and Level
-    ap, xp, lvl = np.load('data/account.npy') if os.path.exists('data/account.npy') else 0, 0, 1
+    if os.path.exists('data/account.npy'):
+        ap, xp, lvl = np.load('data/account.npy', allow_pickle=True)  
+    else: 
+        ap, xp, lvl = 0, 0, 1
+    
     xp_tonext = lvl*500
 
     ## Setting root frame height and width
